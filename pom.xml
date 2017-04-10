@@ -41,8 +41,10 @@
         <url>https://github.com/home1-oss/oss-build/issues</url>
     </issueManagement>
 
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/home1-oss/oss-build</url>
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/home1-oss/oss-build</url>
+    </ciManagement>
 
     <scm>
         <url>https://github.com/home1-oss/oss-build</url>
