@@ -130,6 +130,51 @@
             </properties>
         </profile>
         <profile>
+            <id>github-infrastructure</id>
+            <properties>
+                <sonar.host.url>https://sonarqube.com</sonar.host.url>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>nexus.github-releases</id>
+                    <name>central releases</name>
+                    <url>https://oss.sonatype.org/content/repositories/releases/</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>false</enabled></snapshots>
+                </repository>
+                <repository>
+                    <id>nexus.github-snapshots</id>
+                    <name>central snapshots</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <releases><enabled>false</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>nexus.github-releases</id>
+                    <name>central releases</name>
+                    <url>https://oss.sonatype.org/content/repositories/releases/</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>false</enabled></snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>nexus.github-snapshots</id>
+                    <name>central snapshots</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <releases><enabled>false</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>nexus.github-thirdparty</id>
+                    <name>central thirdparty</name>
+                    <url>https://oss.sonatype.org/content/repositories/third-party-releases/</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>false</enabled></snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
             <id>local-infrastructure</id>
             <properties>
                 <sonar.host.url>${local-sonar.host.url}</sonar.host.url>

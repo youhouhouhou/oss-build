@@ -7,7 +7,7 @@ if [ -z "${GIT_SERVICE}" ]; then
 fi
 if [ -z "${GIT_REPO_OWNER}" ]; then
     if [ -n "${TRAVIS_REPO_SLUG}" ]; then
-        GIT_REPO_OWNER=$(${TRAVIS_REPO_SLUG} | awk -F/ '{print $1}');
+        GIT_REPO_OWNER=$(echo ${TRAVIS_REPO_SLUG} | awk -F/ '{print $1}');
     else
         if [ -z "${INTERNAL_GIT_SERVICE_USER}" ]; then GIT_REPO_OWNER="infra"; else GIT_REPO_OWNER="${INTERNAL_GIT_SERVICE_USER}"; fi
     fi
@@ -16,7 +16,7 @@ fi
 
 export BUILD_PUBLISH_DEPLOY_SEGREGATION="true"
 export BUILD_SITE="true"
-export BUILD_SITE_PATH_PREFIX="oss-build"
+export BUILD_SITE_PATH_PREFIX="oss"
 export BUILD_TEST_FAILURE_IGNORE="false"
 export BUILD_TEST_SKIP="false"
 
