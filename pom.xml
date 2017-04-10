@@ -917,6 +917,35 @@
             </properties>
         </profile>
         <profile>
+            <id>github_infrastructure</id>
+            <activation>
+                <property>
+                    <name>infrastructure</name>
+                    <value>github</value>
+                </property>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <wagon.merge-maven-repos.target>${github-nexus.repositories}/${build.publish.channel}s</wagon.merge-maven-repos.target>
+                <wagon.merge-maven-repos.targetId>github-nexus-${build.publish.channel}s</wagon.merge-maven-repos.targetId>
+                <docker-maven.useConfigFile>true</docker-maven.useConfigFile>
+            </properties>
+            <distributionManagement>
+                <repository>
+                    <id>github-nexus-releases</id>
+                    <url>${github-nexus.repositories}/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>github-nexus-snapshots</id>
+                    <url>${github-nexus.repositories}/snapshots</url>
+                </snapshotRepository>
+                <site>
+                    <id>github-mvnsite</id>
+                    <url>${github-mvnsite.prefix}/${site.path}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+        <profile>
             <id>local_infrastructure</id>
             <activation>
                 <property>
