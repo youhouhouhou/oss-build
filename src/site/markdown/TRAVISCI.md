@@ -20,3 +20,12 @@
 
 
     travis encrypt GITHUB_OAUTH_TOKEN="${GITHUB_OAUTH_TOKEN}" --add env.global
+
+## Note
+
+    env:
+      global:
+      # adapt with gitlab-ci
+      - CI_BUILD_REF_NAME=$TRAVIS_BRANCH
+      # or delete /etc/mavenrc
+      - MAVEN_SKIP_RC=true
