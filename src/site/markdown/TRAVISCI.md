@@ -19,7 +19,7 @@
 * see: [Publishing a Maven Site to GitHub Pages with Travis-CI](https://blog.lanyonm.org/articles/2015/12/19/publish-maven-site-github-pages-travis-ci.html)
 
 
-    travis encrypt GITHUB_OAUTH_TOKEN="${GITHUB_OAUTH_TOKEN}" --add env.global
+    travis encrypt GITHUB_GIT_SERVICE_TOKEN="${GITHUB_GIT_SERVICE_TOKEN}" --add env.global
 
 ## Note
 

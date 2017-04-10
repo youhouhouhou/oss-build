@@ -789,6 +789,9 @@ config_hosts
 config_ssh
 config_profile
 
+GITHUB_GIT_SERVICE_DOMAIN="github.com"
+read_plain_input "GITHUB_GIT_SERVICE_TOKEN" "Please input GITHUB_GIT_SERVICE_TOKEN (oauth token)" "${GITHUB_GIT_SERVICE_TOKEN}"
+
 read_plain_input "INTERNAL_DOCKER_REGISTRY" "Please input INTERNAL_DOCKER_REGISTRY (domain)" "registry.docker.internal"
 echo "INTERNAL_DOCKER_REGISTRY: ${INTERNAL_DOCKER_REGISTRY}"
 INTERNAL_DOCKER_REGISTRY_AUTH=$(cat ~/.docker/config.json | jq -r ".auths[\"${INTERNAL_DOCKER_REGISTRY}\"].auth")
@@ -892,6 +895,15 @@ export BUILD_PUBLISH_CHANNEL=\"snapshot\"
 export BUILD_SITE=\"true\"
 export BUILD_TEST_FAILURE_IGNORE=\"false\"
 
+# TODO GITHUB_DOCKER_REGISTRY GITHUB_FILESERVER ?
+export GITHUB_DOCKER_REGISTRY=\"\"
+export GITHUB_FILESERVER=\"\"
+export GITHUB_GIT_SERVICE=\"https://github.com\"
+export GITHUB_GIT_SERVICE_TOKEN=\"${GITHUB_GIT_SERVICE_TOKEN}\"
+# No GITHUB_JIRA
+# No GITHUB_MVNSITE
+export GITHUB_NEXUS=\"https://oss.sonatype.org\"
+export GITHUB_SONAR=\"https://sonarqube.com\"
 export INTERNAL_DOCKER_REGISTRY=\"${INTERNAL_DOCKER_REGISTRY}\"
 export INTERNAL_FILESERVER=\"${INTERNAL_FILESERVER}\"
 export INTERNAL_GIT_SERVICE=\"${INTERNAL_GIT_SERVICE}\"
@@ -903,6 +915,7 @@ export LOCAL_DOCKER_REGISTRY=\"registry.docker.local\"
 export LOCAL_FILESERVER=\"http://local-fileserver:80\"
 export LOCAL_GIT_SERVICE=\"http://local-git:20080\"
 export LOCAL_GIT_SERVICE_TOKEN=\"\"
+# No LOCAL_JIRA
 export LOCAL_MVNSITE=\"dav:http://local-mvnsite:28081/nexus/repository/mvnsite\"
 export LOCAL_NEXUS=\"http://nexus.local:28081/nexus\"
 export LOCAL_SONAR=\"http://local-sonarqube:9000\"
@@ -959,6 +972,8 @@ export MAVEN_OPTS=\"\${MAVEN_OPTS} -Ddocker.registry=\${DOCKER_REGISTRY}\"
 # 此处frontend设置 假设公司内部和本地都使用nexus3, 并且contextPath都为nexus, 如假设不满足需单独设置
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dfrontend.nodeDownloadRoot=\${NEXUS}/nexus/repository/npm-dist/\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dfrontend.npmDownloadRoot=\${NEXUS}/nexus/repository/npm-public/npm/-/\"
+export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dgithub-nexus.repositories=\${GITHUB_NEXUS}/content/repositories\"
+export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dgithub-sonar.host.url=\${GITHUB_SONAR}\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dinternal-mvnsite.prefix=\${INTERNAL_MVNSITE}\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dinternal-nexus.mirror=\${INTERNAL_NEXUS}/content/groups/public/\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dinternal-nexus.repositories=\${INTERNAL_NEXUS}/content/repositories\"
@@ -981,14 +996,20 @@ function oss_vm_options() {
     vm_options=\"\${vm_options} -Ddocker.registry=\${DOCKER_REGISTRY}\"
     vm_options=\"\${vm_options} -Dfrontend.nodeDownloadRoot=\${NEXUS}/nexus/repository/npm-dist/\"
     vm_options=\"\${vm_options} -Dfrontend.npmDownloadRoot=\${NEXUS}/nexus/repository/npm-public/npm/-/\"
+    vm_options=\"\${vm_options} -Dgithub-nexus.repositories=\${GITHUB_NEXUS}/content/repositories\"
+    vm_options=\"\${vm_options} -Dgithub-sonar.host.url=\${GITHUB_SONAR}\"
     vm_options=\"\${vm_options} -Dinternal-mvnsite.prefix=\${INTERNAL_MVNSITE}\"
     vm_options=\"\${vm_options} -Dinternal-nexus.mirror=\${INTERNAL_NEXUS}/content/groups/public/\"
     vm_options=\"\${vm_options} -Dinternal-nexus.repositories=\${INTERNAL_NEXUS}/content/repositories\"
     vm_options=\"\${vm_options} -Dlocal-mvnsite.prefix=\${LOCAL_MVNSITE}\"
     vm_options=\"\${vm_options} -Dnexus.local.mirror=\${LOCAL_NEXUS}/repository/maven-public/\"
     vm_options=\"\${vm_options} -Dnexus.local.repositories=\${LOCAL_NEXUS}/repository\"
+    vm_options=\"\${vm_options} -Dlocal-sonar.host.url=\${LOCAL_SONAR}\"
+    vm_options=\"\${vm_options} -Dmaven.test.failure.ignore=\${BUILD_TEST_FAILURE_IGNORE}\"
     vm_options=\"\${vm_options} -Dpmd.ruleset.location=\${GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/pmd/pmd-ruleset-5.3.5.xml\"
     vm_options=\"\${vm_options} -Dinfrastructure=\${INFRASTRUCTURE}\"
+    vm_options=\"\${vm_options} -Dsite=\${BUILD_SITE}\"
+    vm_options=\"\${vm_options} -Duser.language=zh -Duser.region=CN -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai\"
     echo \"\${vm_options}\"
 }
 alias oss-vmopts=\"oss_vm_options\"
@@ -1022,7 +1043,7 @@ done
 chown ${USER} ${HOME}/.ssh/internal-git && chmod 600 ${HOME}/.ssh/internal-git
 
 # maven settings
-OSS_MAVEN_SETTINGS_LOCATION="${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings.xml"
+OSS_MAVEN_SETTINGS_LOCATION="${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings.xml"
 mkdir -p ${HOME}/.m2/
 if [ ! -f ${HOME}/.m2/settings.xml ]; then
     echo -e '\n'
@@ -1034,7 +1055,7 @@ else
     read -p "检查'${HOME}/.m2/settings.xml'完成后按 ENTER 键继续"
 fi
 
-OSS_MAVEN_SETTINGS_SECURITY_LOCATION="${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings-security.xml"
+OSS_MAVEN_SETTINGS_SECURITY_LOCATION="${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings-security.xml"
 if [ ! -f ${HOME}/.m2/settings-security.xml ]; then
     echo -e '\n'
     echo "未找到'${HOME}/.m2/settings-security.xml'文件, 自动从'${OSS_MAVEN_SETTINGS_SECURITY_LOCATION}'下载."
@@ -1069,7 +1090,7 @@ if [ -z \"\${INFRASTRUCTURE}\" ]; then
 fi
 
 if [ ! -f oss_repositories.sh ]; then
-    eval \"\$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/oss_repositories.sh)\"
+    eval \"\$(curl -H 'Cache-Control: no-cache' -s -L ${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/oss_repositories.sh)\"
 else
     . oss_repositories.sh
 fi
@@ -1086,14 +1107,14 @@ echo \"Insecure registries 需要设置 <公司内部docker-registry域名>\"
 echo \"Registry mirrors 建议中国用户使用 http://hub-mirror.c.163.com, 启动nexus.local以后可以设置为http://registry.docker.local:5001\"
 read -p \"检查Docker设置完成后按 ENTER 键继续\"
 
-clone_oss_repositories '${INTERNAL_GIT_SERVICE_DOMAIN}' '${user_group}'
+clone_oss_repositories '${GITHUB_GIT_SERVICE_DOMAIN}' '${user_group}'
 for repository in \${!OSS_REPOSITORIES_DICT[@]}; do
     echo \"git checkout master of \${repository}\"
     (cd \${repository}; if ! git rev-parse --verify master > /dev/null; then git fetch && git branch --track master origin/master; fi)
 done
 
 #(cd oss-environment/oss-docker/nexus3 && docker-compose build && docker-compose up -d)
-#eval \$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/files.sh)
+#eval \$(curl -H 'Cache-Control: no-cache' -s -L ${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/files.sh)
 #(cd oss-environment/oss-docker/gogs && docker-compose build && docker-compose up -d)
 #waitforit -full-connection=tcp://local-git:20080 -timeout=600
 #waitforit -full-connection=tcp://local-git:20022 -timeout=600

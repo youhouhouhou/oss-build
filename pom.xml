@@ -930,7 +930,7 @@
                 <wagon.merge-maven-repos.targetId>github-nexus-${build.publish.channel}s</wagon.merge-maven-repos.targetId>
                 <docker-maven.useConfigFile>true</docker-maven.useConfigFile>
                 <github.global.server>github</github.global.server>
-                <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
+                <github.global.oauth2Token>${env.GITHUB_GIT_SERVICE_TOKEN}</github.global.oauth2Token>
             </properties>
             <distributionManagement>
                 <repository>
@@ -941,10 +941,6 @@
                     <id>github-nexus-snapshots</id>
                     <url>${github-nexus.repositories}/snapshots</url>
                 </snapshotRepository>
-                <site>
-                    <id>github-mvnsite</id>
-                    <url>${github-mvnsite.prefix}/${site.path}</url>
-                </site>
             </distributionManagement>
             <build>
                 <plugins>

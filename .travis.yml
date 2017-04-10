@@ -1,3 +1,7 @@
+addons:
+  apt:
+    packages:
+    - graphviz
 before_install:
 - wget https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
 - unzip -qq apache-maven-3.3.9-bin.zip
@@ -19,7 +23,6 @@ env:
   - GIT_SERVICE=https://github.com
   - INFRASTRUCTURE=github
   - MAVEN_SKIP_RC=true
-  - secure: hoO866CEQsXD4f6BF+nch40WA4P7sghHtURc0AIiNHZSeIYOpDL61bKF1iXqt/hPBhlWy0aM6bKi2dyR9gQiaqduuHs18bFTLoco1odxjRlIO1pfuXLGV0VgYbuLFaKqVLPm/8yRvb6VB55aNmmti0CP5VOgdZvIdUZDPwfZ10UgwLLSKyrY9mRIshdFROt3H6tPEdMGj/+GjXn+2S49MiWI4WTpo+h7a+DjEICVFBkElA3oLo07RHC4PFFGYROv2UE2EosSkto9Eo+u20G91EP6v59GXVFQfT219Awk+4i6dRO8E8ZTihTme6LsPUVssYf8cp6e+0/dwEB/V6gRLQA1OtuqH3nUk4Reg1EUwEX/mxee3S7c/AiXvAoV+ryCip7xo43HgiVzGX61NgS9KASNDuX/8eWfGXyJGnbJUrRQX88lALLmchljnQJoze8QADWB1g3JZMB4nkC90KDS/UDPJFfgm47EEUF8/30bA43rCD+iYBqnPdAQZF0gb9DNh1h+K62Wpo7oxt8eaFz5LIxKohaFNxjgq6Y9yWVMKm82ERP105fyBZ/D+8xg9Wgg+N6htjlkluWYyosOarLFp7YbpSRUu4xn2q9jfqflCJITxhtCDoPCN2GcNjJk5pO0fFlRlZ66FgOQqM4pma3WjqLx3aMLMGDQkR7YxvmVoG0=
 jdk:
 - oraclejdk8
 language: java
