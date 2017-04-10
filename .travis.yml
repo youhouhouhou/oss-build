@@ -1,0 +1,15 @@
+
+branches:
+  only:
+  - master
+  - develop
+  - build_on_trivasci
+
+jdk:
+  - oraclejdk8
+
+language: java
+
+script:
+  - echo "on_every_push"
+  - bash ci.sh test_and_build
