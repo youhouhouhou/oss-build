@@ -790,7 +790,7 @@ config_ssh
 config_profile
 
 GITHUB_GIT_SERVICE_DOMAIN="github.com"
-read_plain_input "GITHUB_GIT_SERVICE_TOKEN" "Please input GITHUB_GIT_SERVICE_TOKEN (oauth token)" "${GITHUB_GIT_SERVICE_TOKEN}"
+read_secret_input "GITHUB_GIT_SERVICE_TOKEN" "Please input GITHUB_GIT_SERVICE_TOKEN (oauth token)" "${GITHUB_GIT_SERVICE_TOKEN}"
 
 read_plain_input "INTERNAL_DOCKER_REGISTRY" "Please input INTERNAL_DOCKER_REGISTRY (domain)" "registry.docker.internal"
 echo "INTERNAL_DOCKER_REGISTRY: ${INTERNAL_DOCKER_REGISTRY}"
@@ -802,6 +802,7 @@ else
     echo "Docker already login."
 fi
 
+# TODO nexus2 is not fileserver
 read_plain_input "INTERNAL_FILESERVER" "Please input INTERNAL_FILESERVER (http[s]://domain)" "http://nexus2.internal"
 echo "INTERNAL_FILESERVER: ${INTERNAL_FILESERVER}"
 
@@ -829,35 +830,36 @@ else
 fi
 
 # fork projects
-if [ ! -f oss_repositories.sh ]; then
-    eval "$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/oss_repositories.sh)"
-else
-    . oss_repositories.sh
-fi
-user_group=$(echo ${INTERNAL_GITLAB_SESSION} | jq -r ".username")
-#echo "OSS_REPOSITORIES_DICT: ${!OSS_REPOSITORIES_DICT[@]}"
-for repository in ${!OSS_REPOSITORIES_DICT[@]}; do
-    original_group=$(echo ${OSS_REPOSITORIES_DICT[${repository}]} | sed -E 's#^/([^/]+)/[^/]+#\1#')
-    #echo "check or fork repository from ${original_group}/${repository} to ${user_group}/${repository}"
-    original_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${original_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
-    #echo "original_project_info: ${original_project_info}"
-    original_project_id=$(echo "${original_project_info}" | jq -r ".id")
-    #echo "original_project_id: ${original_project_id}"
-    forked_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${user_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
-    #echo "forked_project_info: ${forked_project_info}"
-    forked_project_id=$(echo "${forked_project_info}" | jq -r ".id")
-    if [ -z "${forked_project_id}" ] || [ "null" == "${forked_project_id}" ]; then
-        fork_response=$(curl -s -L -X POST "${INTERNAL_GIT_SERVICE}/api/v3/projects/fork/${original_project_id}?private_token=${INTERNAL_GIT_SERVICE_TOKEN}")
-        #echo "fork_response: ${fork_response}"
-        forked_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${user_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
-        #echo "forked_project_info: ${forked_project_info}"
-        forked_project_id=$(echo "${forked_project_info}" | jq -r ".id")
-        echo "newly forked_project: ${forked_project_id} $(echo ${forked_project_info} | jq -r '.http_url_to_repo')"
-    else
-        forked_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${user_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
-        echo "already forked_project: ${forked_project_id} $(echo ${forked_project_info} | jq -r '.http_url_to_repo')"
-    fi
-done
+# TODO fork github projects
+#if [ ! -f oss_repositories.sh ]; then
+#    eval "$(curl -H 'Cache-Control: no-cache' -s -L ${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/oss_repositories.sh)"
+#else
+#    . oss_repositories.sh
+#fi
+#user_group=$(echo ${INTERNAL_GITLAB_SESSION} | jq -r ".username")
+##echo "OSS_REPOSITORIES_DICT: ${!OSS_REPOSITORIES_DICT[@]}"
+#for repository in ${!OSS_REPOSITORIES_DICT[@]}; do
+#    original_group=$(echo ${OSS_REPOSITORIES_DICT[${repository}]} | sed -E 's#^/([^/]+)/[^/]+#\1#')
+#    #echo "check or fork repository from ${original_group}/${repository} to ${user_group}/${repository}"
+#    original_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${original_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
+#    #echo "original_project_info: ${original_project_info}"
+#    original_project_id=$(echo "${original_project_info}" | jq -r ".id")
+#    #echo "original_project_id: ${original_project_id}"
+#    forked_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${user_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
+#    #echo "forked_project_info: ${forked_project_info}"
+#    forked_project_id=$(echo "${forked_project_info}" | jq -r ".id")
+#    if [ -z "${forked_project_id}" ] || [ "null" == "${forked_project_id}" ]; then
+#        fork_response=$(curl -s -L -X POST "${INTERNAL_GIT_SERVICE}/api/v3/projects/fork/${original_project_id}?private_token=${INTERNAL_GIT_SERVICE_TOKEN}")
+#        #echo "fork_response: ${fork_response}"
+#        forked_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${user_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
+#        #echo "forked_project_info: ${forked_project_info}"
+#        forked_project_id=$(echo "${forked_project_info}" | jq -r ".id")
+#        echo "newly forked_project: ${forked_project_id} $(echo ${forked_project_info} | jq -r '.http_url_to_repo')"
+#    else
+#        forked_project_info=$(gitlab_project_info "${INTERNAL_GIT_SERVICE}" "${user_group}" "${repository}" "${INTERNAL_GIT_SERVICE_TOKEN}")
+#        echo "already forked_project: ${forked_project_id} $(echo ${forked_project_info} | jq -r '.http_url_to_repo')"
+#    fi
+#done
 
 read_plain_input "INTERNAL_JIRA" "Please input INTERNAL_JIRA (http[s]://domain)" "http://jira7.internal"
 echo "INTERNAL_JIRA: ${INTERNAL_JIRA}"
@@ -1107,42 +1109,42 @@ echo \"Insecure registries 需要设置 <公司内部docker-registry域名>\"
 echo \"Registry mirrors 建议中国用户使用 http://hub-mirror.c.163.com, 启动nexus.local以后可以设置为http://registry.docker.local:5001\"
 read -p \"检查Docker设置完成后按 ENTER 键继续\"
 
-clone_oss_repositories '${GITHUB_GIT_SERVICE_DOMAIN}' '${user_group}'
-for repository in \${!OSS_REPOSITORIES_DICT[@]}; do
-    echo \"git checkout master of \${repository}\"
-    (cd \${repository}; if ! git rev-parse --verify master > /dev/null; then git fetch && git branch --track master origin/master; fi)
-done
-
-#(cd oss-environment/oss-docker/nexus3 && docker-compose build && docker-compose up -d)
-#eval \$(curl -H 'Cache-Control: no-cache' -s -L ${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/files.sh)
-#(cd oss-environment/oss-docker/gogs && docker-compose build && docker-compose up -d)
-#waitforit -full-connection=tcp://local-git:20080 -timeout=600
-#waitforit -full-connection=tcp://local-git:20022 -timeout=600
-sleep 10
-docker exec local-git /app/gogs/entrypoint.sh export_git_admin_key > ~/.ssh/local-git && chmod 600 ~/.ssh/local-git;
-#waitforit -full-connection=tcp://nexus.local:28081 -timeout=600
-#waitforit -full-connection=tcp://nexus.local:5000 -timeout=600
-sleep 10
-
-#(cd oss-build && mvn clean install deploy)
-#(cd oss-build && mvn site site:stage site:stage-deploy)
-#(cd oss-lib && mvn clean install deploy)
-#(cd oss-lib && mvn site site:stage site:stage-deploy)
-#(cd oss-platform && mvn clean install deploy)
-#(cd oss-platform && mvn site site:stage site:stage-deploy)
-#(cd oss-environment && mvn clean install deploy)
-#(cd oss-environment && mvn site site:stage site:stage-deploy)
-
-echo Start local-eureka
-#(cd oss-environment/oss-eureka && docker-compose up -d)
-#waitforit -full-connection=tcp://local-eureka:8761 -timeout=600
-echo Start local-cloudbus
-#(cd oss-environment/oss-cloudbus && docker-compose up -d)
-#waitforit -full-connection=tcp://local-cloudbus:5672 -timeout=600
-#waitforit -full-connection=tcp://local-cloudbus:15672 -timeout=600
-echo Start local-configserver
-#(cd oss-environment/oss-configserver && docker-compose up -d)
-#waitforit -full-connection=tcp://local-configserver:8888 -timeout=600
+#clone_oss_repositories '${GITHUB_GIT_SERVICE_DOMAIN}' '${user_group}'
+#for repository in \${!OSS_REPOSITORIES_DICT[@]}; do
+#    echo \"git checkout master of \${repository}\"
+#    (cd \${repository}; if ! git rev-parse --verify master > /dev/null; then git fetch && git branch --track master origin/master; fi)
+#done
+#
+##(cd oss-environment/oss-docker/nexus3 && docker-compose build && docker-compose up -d)
+##eval \$(curl -H 'Cache-Control: no-cache' -s -L ${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/files.sh)
+##(cd oss-environment/oss-docker/gogs && docker-compose build && docker-compose up -d)
+##waitforit -full-connection=tcp://local-git:20080 -timeout=600
+##waitforit -full-connection=tcp://local-git:20022 -timeout=600
+#sleep 10
+#docker exec local-git /app/gogs/entrypoint.sh export_git_admin_key > ~/.ssh/local-git && chmod 600 ~/.ssh/local-git;
+##waitforit -full-connection=tcp://nexus.local:28081 -timeout=600
+##waitforit -full-connection=tcp://nexus.local:5000 -timeout=600
+#sleep 10
+#
+##(cd oss-build && mvn clean install deploy)
+##(cd oss-build && mvn site site:stage site:stage-deploy)
+##(cd oss-lib && mvn clean install deploy)
+##(cd oss-lib && mvn site site:stage site:stage-deploy)
+##(cd oss-platform && mvn clean install deploy)
+##(cd oss-platform && mvn site site:stage site:stage-deploy)
+##(cd oss-environment && mvn clean install deploy)
+##(cd oss-environment && mvn site site:stage site:stage-deploy)
+#
+#echo Start local-eureka
+##(cd oss-environment/oss-eureka && docker-compose up -d)
+##waitforit -full-connection=tcp://local-eureka:8761 -timeout=600
+#echo Start local-cloudbus
+##(cd oss-environment/oss-cloudbus && docker-compose up -d)
+##waitforit -full-connection=tcp://local-cloudbus:5672 -timeout=600
+##waitforit -full-connection=tcp://local-cloudbus:15672 -timeout=600
+#echo Start local-configserver
+##(cd oss-environment/oss-configserver && docker-compose up -d)
+##waitforit -full-connection=tcp://local-configserver:8888 -timeout=600
 "
 
 echo -e "\n"
