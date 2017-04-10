@@ -21,6 +21,10 @@
 
     travis encrypt GITHUB_GIT_SERVICE_TOKEN="${GITHUB_GIT_SERVICE_TOKEN}" --add env.global
 
+## Environment variables
+
+see: [Environment variables](https://docs.travis-ci.com/user/environment-variables/)
+
 ## Note
 
     env:

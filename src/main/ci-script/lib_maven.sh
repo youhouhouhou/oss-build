@@ -99,7 +99,12 @@ maven_publish_snapshot() {
         if [ ! -z "${BUILD_SITE_PATH_PREFIX}" ]; then
             export MAVEN_OPTS="${MAVEN_OPTS} -Dsite.path=${BUILD_SITE_PATH_PREFIX}-snapshot"
         fi
-        echo yes | mvn ${MAVEN_SETTINGS} site:site site:stage site:stage-deploy
+        if [ "${INFRASTRUCTURE}" != "github" ]; then
+            echo yes | mvn ${MAVEN_SETTINGS} site:site site:stage site:stage-deploy
+        else
+            # -X enable debug logging for Maven to avoid build timeout (not generate output)
+            mvn ${MAVEN_SETTINGS} site site-deploy
+        fi
     fi
 }
 
@@ -122,6 +127,11 @@ maven_publish_release() {
         if [ ! -z "${BUILD_SITE_PATH_PREFIX}" ]; then
             export MAVEN_OPTS="${MAVEN_OPTS} -Dsite.path=${BUILD_SITE_PATH_PREFIX}-release"
         fi
-        echo yes | mvn ${MAVEN_SETTINGS} site:site site:stage site:stage-deploy
+        if [ "${INFRASTRUCTURE}" != "github" ]; then
+            echo yes | mvn ${MAVEN_SETTINGS} site:site site:stage site:stage-deploy
+        else
+            # -X enable debug logging for Maven to avoid build timeout (not generate output)
+            mvn ${MAVEN_SETTINGS} site site-deploy
+        fi
     fi
 }
