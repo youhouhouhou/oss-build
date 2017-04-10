@@ -41,9 +41,8 @@
             <passphrase>${build.gpg.passphrase}</passphrase>
         </server>
         <server>
-            <id>github-${env.GITHUB_ACCOUNT_USER}</id>
-            <username>${env.GITHUB_ACCOUNT_EMAIL}</username>
-            <password>${env.GITHUB_ACCOUNT_PASS}</password>
+            <id>github</id>
+            <password>${env.GITHUB_GIT_SERVICE_TOKEN}</password>
         </server>
         <server>
             <id>github-nexus-releases</id>

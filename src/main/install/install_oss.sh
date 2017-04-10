@@ -1048,6 +1048,7 @@ chown ${USER} ${HOME}/.ssh/internal-git && chmod 600 ${HOME}/.ssh/internal-git
 OSS_MAVEN_SETTINGS_LOCATION="${GITHUB_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings.xml"
 mkdir -p ${HOME}/.m2/
 if [ ! -f ${HOME}/.m2/settings.xml ]; then
+    # TODO echo -e 在屏幕上留下 -e
     echo -e '\n'
     echo "未找到'${HOME}/.m2/settings.xml'文件, 自动从'${OSS_MAVEN_SETTINGS_LOCATION}'下载."
     curl -H 'Cache-Control: no-cache' -s -o ${HOME}/.m2/settings.xml -L ${OSS_MAVEN_SETTINGS_LOCATION}
