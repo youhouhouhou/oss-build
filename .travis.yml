@@ -13,3 +13,4 @@ language: java
 script:
   - echo "on_every_push"
   - bash ci.sh test_and_build
+
