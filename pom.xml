@@ -7,7 +7,7 @@
     <artifactId>oss-build</artifactId>
     <version>1.0.8.OSS-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <url>https://github.com/Yirendai/oss-build</url>
+    <url>https://github.com/home1-oss/oss-build</url>
 
     <developers>
         <developer>
@@ -36,24 +36,18 @@
         </developer>
     </developers>
 
-    <!--issueManagement>
-        <system>Gitlab Issues</system>
-        <url>http://gitlab.internal/infra/oss-build/issues</url>
-    </issueManagement-->
     <issueManagement>
-        <system>JIRA</system>
-        <url>http://jira7.internal/browse/${jira.projectKey}</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/home1-oss/oss-build/issues</url>
     </issueManagement>
 
-    <ciManagement>
-        <system>Gitlab CI</system>
-        <url>http://gitlab.internal/infra/oss-build/builds</url>
-    </ciManagement>
+    <system>Travis CI</system>
+    <url>https://travis-ci.org/home1-oss/oss-build</url>
 
     <scm>
-        <url>https://github.com/Yirendai/oss-build</url>
-        <connection>scm:git:https://github.com/Yirendai/oss-build.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/Yirendai/oss-build.git</developerConnection>
+        <url>https://github.com/home1-oss/oss-build</url>
+        <connection>scm:git:https://github.com/home1-oss/oss-build.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/home1-oss/oss-build.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

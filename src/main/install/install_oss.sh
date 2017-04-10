@@ -827,7 +827,7 @@ fi
 
 # fork projects
 if [ ! -f oss_repositories.sh ]; then
-    eval "$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/infra/oss-build/raw/develop/src/main/install/oss_repositories.sh)"
+    eval "$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/oss_repositories.sh)"
 else
     . oss_repositories.sh
 fi
@@ -954,7 +954,7 @@ fi
 export MAVEN_OPTS=\"\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dbuild.publish.channel=\${BUILD_PUBLISH_CHANNEL}\"
 # 此处GIT_SERVICE相关设置 假设公司内部和本地git服务访问raw文件的方式相同, 即 <项目>/raw/<ref>/<文件路径>, 如假设不满足需单独设置
-export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dcheckstyle.config.location=\${GIT_SERVICE}/infra/oss-build/raw/master/src/main/checkstyle/google_checks_6.19.xml\"
+export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dcheckstyle.config.location=\${GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/checkstyle/google_checks_6.19.xml\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Ddocker.registry=\${DOCKER_REGISTRY}\"
 # 此处frontend设置 假设公司内部和本地都使用nexus3, 并且contextPath都为nexus, 如假设不满足需单独设置
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dfrontend.nodeDownloadRoot=\${NEXUS}/nexus/repository/npm-dist/\"
@@ -969,7 +969,7 @@ export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dnexus.local.repositories=\${LOCAL_NEXUS}/re
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dlocal-sonar.host.url=\${LOCAL_SONAR}\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dmaven.test.failure.ignore=\${BUILD_TEST_FAILURE_IGNORE}\"
 # 此处GIT_SERVICE相关设置 假设公司内部和本地git服务访问raw文件的方式相同, 即 <项目>/raw/<ref>/<文件路径>, 如假设不满足需单独设置
-export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dpmd.ruleset.location=\${GIT_SERVICE}/infra/oss-build/raw/master/src/main/pmd/pmd-ruleset-5.3.5.xml\"
+export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dpmd.ruleset.location=\${GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/pmd/pmd-ruleset-5.3.5.xml\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dinfrastructure=\${INFRASTRUCTURE}\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Dsite=\${BUILD_SITE}\"
 export MAVEN_OPTS=\"\${MAVEN_OPTS} -Duser.language=zh -Duser.region=CN -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Shanghai\"
@@ -977,7 +977,7 @@ export MAVEN_OPTS=\"\${MAVEN_OPTS} -Duser.language=zh -Duser.region=CN -Dfile.en
 function oss_vm_options() {
     local vm_options=""
     vm_options=\"\${vm_options} -Dbuild.publish.channel=snapshot\"
-    vm_options=\"\${vm_options} -Dcheckstyle.config.location=\${GIT_SERVICE}/infra/oss-build/raw/master/src/main/checkstyle/google_checks_6.19.xml\"
+    vm_options=\"\${vm_options} -Dcheckstyle.config.location=\${GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/checkstyle/google_checks_6.19.xml\"
     vm_options=\"\${vm_options} -Ddocker.registry=\${DOCKER_REGISTRY}\"
     vm_options=\"\${vm_options} -Dfrontend.nodeDownloadRoot=\${NEXUS}/nexus/repository/npm-dist/\"
     vm_options=\"\${vm_options} -Dfrontend.npmDownloadRoot=\${NEXUS}/nexus/repository/npm-public/npm/-/\"
@@ -987,7 +987,7 @@ function oss_vm_options() {
     vm_options=\"\${vm_options} -Dlocal-mvnsite.prefix=\${LOCAL_MVNSITE}\"
     vm_options=\"\${vm_options} -Dnexus.local.mirror=\${LOCAL_NEXUS}/repository/maven-public/\"
     vm_options=\"\${vm_options} -Dnexus.local.repositories=\${LOCAL_NEXUS}/repository\"
-    vm_options=\"\${vm_options} -Dpmd.ruleset.location=\${GIT_SERVICE}/infra/oss-build/raw/master/src/main/pmd/pmd-ruleset-5.3.5.xml\"
+    vm_options=\"\${vm_options} -Dpmd.ruleset.location=\${GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/pmd/pmd-ruleset-5.3.5.xml\"
     vm_options=\"\${vm_options} -Dinfrastructure=\${INFRASTRUCTURE}\"
     echo \"\${vm_options}\"
 }
@@ -1022,7 +1022,7 @@ done
 chown ${USER} ${HOME}/.ssh/internal-git && chmod 600 ${HOME}/.ssh/internal-git
 
 # maven settings
-OSS_MAVEN_SETTINGS_LOCATION="${INTERNAL_GIT_SERVICE}/infra/oss-build/raw/master/src/main/maven/settings.xml"
+OSS_MAVEN_SETTINGS_LOCATION="${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings.xml"
 mkdir -p ${HOME}/.m2/
 if [ ! -f ${HOME}/.m2/settings.xml ]; then
     echo -e '\n'
@@ -1034,7 +1034,7 @@ else
     read -p "检查'${HOME}/.m2/settings.xml'完成后按 ENTER 键继续"
 fi
 
-OSS_MAVEN_SETTINGS_SECURITY_LOCATION="${INTERNAL_GIT_SERVICE}/infra/oss-build/raw/master/src/main/maven/settings-security.xml"
+OSS_MAVEN_SETTINGS_SECURITY_LOCATION="${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/master/src/main/maven/settings-security.xml"
 if [ ! -f ${HOME}/.m2/settings-security.xml ]; then
     echo -e '\n'
     echo "未找到'${HOME}/.m2/settings-security.xml'文件, 自动从'${OSS_MAVEN_SETTINGS_SECURITY_LOCATION}'下载."
@@ -1069,7 +1069,7 @@ if [ -z \"\${INFRASTRUCTURE}\" ]; then
 fi
 
 if [ ! -f oss_repositories.sh ]; then
-    eval \"\$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/infra/oss-build/raw/develop/src/main/install/oss_repositories.sh)\"
+    eval \"\$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/oss_repositories.sh)\"
 else
     . oss_repositories.sh
 fi
@@ -1093,7 +1093,7 @@ for repository in \${!OSS_REPOSITORIES_DICT[@]}; do
 done
 
 #(cd oss-environment/oss-docker/nexus3 && docker-compose build && docker-compose up -d)
-#eval \$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/infra/oss-build/raw/develop/src/main/install/files.sh)
+#eval \$(curl -H 'Cache-Control: no-cache' -s -L ${INTERNAL_GIT_SERVICE}/home1-oss/oss-build/raw/develop/src/main/install/files.sh)
 #(cd oss-environment/oss-docker/gogs && docker-compose build && docker-compose up -d)
 #waitforit -full-connection=tcp://local-git:20080 -timeout=600
 #waitforit -full-connection=tcp://local-git:20022 -timeout=600
