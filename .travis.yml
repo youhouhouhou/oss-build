@@ -23,6 +23,7 @@ env:
     - CI_BUILD_REF_NAME=$TRAVIS_BRANCH
     - GIT_SERVICE=https://github.com
     - INFRASTRUCTURE=github
+    - MAVEN_SKIP_RC=true
 
 jdk:
   - oraclejdk8
