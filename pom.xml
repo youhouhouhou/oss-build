@@ -759,7 +759,8 @@
                                     <version>[${java.version}.0,)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>[3.3.9,)</version>
+                                    <!-- travis-ci uses 3.2.5 not 3.3.9  -->
+                                    <version>[3.2.5,)</version>
                                 </requireMavenVersion>
                                 <!--requireUpperBoundDeps-->
                                 <dependencyConvergence>
