@@ -18,10 +18,11 @@ cache:
   - '$HOME/.sonar/cache'
 
 env:
-  # adapt with gitlab-ci
-  - CI_BUILD_REF_NAME=$TRAVIS_BRANCH
-  - GIT_SERVICE=https://github.com
-  - INFRASTRUCTURE=github
+  global:
+    # adapt with gitlab-ci
+    - CI_BUILD_REF_NAME=$TRAVIS_BRANCH
+    - GIT_SERVICE=https://github.com
+    - INFRASTRUCTURE=github
 
 jdk:
   - oraclejdk8
