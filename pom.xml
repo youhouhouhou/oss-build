@@ -965,7 +965,7 @@
                             <message>Creating site for ${project.artifactId}-${project.version}</message>
                             <path>${github.site.path}</path>
                             <!--path>${project.distributionManagement.site.url}</path-->
-                            <merge>false</merge>
+                            <merge>true</merge>
                             <noJekyll>true</noJekyll>
                             <repositoryOwner>${env.GITHUB_USERNAME}</repositoryOwner>
                         </configuration>
