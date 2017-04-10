@@ -102,11 +102,8 @@ maven_publish_snapshot() {
         if [ "${INFRASTRUCTURE}" != "github" ]; then
             echo yes | mvn ${MAVEN_SETTINGS} site:site site:stage site:stage-deploy
         else
-            echo "type of travis_wait is $(type -t travis_wait)"
             # -X enable debug logging for Maven to avoid build timeout (not generate output)
-            if [ "$(type -t travis_wait)" == "function" ]; then
-                travis_wait 30 mvn ${MAVEN_SETTINGS} site site-deploy
-            fi
+            mvn ${MAVEN_SETTINGS} site site-deploy
         fi
     fi
 }
@@ -133,11 +130,8 @@ maven_publish_release() {
         if [ "${INFRASTRUCTURE}" != "github" ]; then
             echo yes | mvn ${MAVEN_SETTINGS} site:site site:stage site:stage-deploy
         else
-            echo "type of travis_wait is $(type -t travis_wait)"
             # -X enable debug logging for Maven to avoid build timeout (not generate output)
-            if [ "$(type -t travis_wait)" == "function" ]; then
-                travis_wait 30 mvn ${MAVEN_SETTINGS} site site-deploy
-            fi
+            mvn ${MAVEN_SETTINGS} site site-deploy
         fi
     fi
 }
