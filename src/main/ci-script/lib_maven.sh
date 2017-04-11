@@ -33,7 +33,7 @@ DEPLOY_LOCAL_REPO_IF_NEED="${HOME}/local-deploy/${COMMIT_ID}"
 
 echo "maven_settings: ${MAVEN_SETTINGS} effective-pom: ${EFFECTIVE_POM_FILE}"
 # log output avoid travis timeout
-mvn ${MAVEN_SETTINGS} help:effective-pom | grep 'Downloading:'
+mvn ${MAVEN_SETTINGS} help:effective-pom | grep 'Downloading:' | awk '!(NR%10)'
 mvn ${MAVEN_SETTINGS} help:effective-pom > ${EFFECTIVE_POM_FILE}
 
 export LOGGING_LEVEL_="INFO"
