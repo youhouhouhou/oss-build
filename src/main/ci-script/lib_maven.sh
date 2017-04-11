@@ -35,6 +35,7 @@ echo "maven_settings: ${MAVEN_SETTINGS} effective-pom: ${EFFECTIVE_POM_FILE}"
 mvn ${MAVEN_SETTINGS} help:effective-pom > ${EFFECTIVE_POM_FILE}
 
 export LOGGING_LEVEL_="INFO"
+echo "LOGGING_LEVEL_: ${LOGGING_LEVEL_}"
 
 maven_pull_base_images() {
     if type -p docker > /dev/null; then
