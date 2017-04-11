@@ -43,3 +43,5 @@ Variables in travis repo settings:
       - CI_BUILD_REF_NAME=$TRAVIS_BRANCH
       # or delete /etc/mavenrc
       - MAVEN_SKIP_RC=true
+    # Skipping the Installation Step
+    install: true

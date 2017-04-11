@@ -32,9 +32,12 @@ EFFECTIVE_POM_FILE="${CI_CACHE}/effective-pom-${COMMIT_ID}.xml"
 DEPLOY_LOCAL_REPO_IF_NEED="${HOME}/local-deploy/${COMMIT_ID}"
 
 echo "maven_settings: ${MAVEN_SETTINGS} effective-pom: ${EFFECTIVE_POM_FILE}"
+# log output avoid travis timeout
+mvn ${MAVEN_SETTINGS} help:effective-pom
 mvn ${MAVEN_SETTINGS} help:effective-pom > ${EFFECTIVE_POM_FILE}
 
 export LOGGING_LEVEL_="INFO"
+echo "LOGGING_LEVEL_: ${LOGGING_LEVEL_}"
 
 maven_pull_base_images() {
     if type -p docker > /dev/null; then
