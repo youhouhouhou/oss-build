@@ -17,7 +17,7 @@ initscript {
 
 allprojects {
   // execute after settings.gradle
-  println "init.gradle allprojects ${project.name}"
+  //println "init.gradle allprojects ${project.name}"
 
   if (rootProject.name == project.name) {
     def dotGit = new File(".git");
@@ -86,8 +86,11 @@ allprojects {
     println "nexusRepositories: " + ext.nexusRepositories
     println "revision: " + ext.revision
     println "settingsFileOpt: " + ext.settingsFileOpt + ", securityFileOpt: " + ext.securityFileOpt
-    println "${ext.infrastructure}-nexus-releases username: " + ext.mavenSettings.getText("//server[id='${ext.infrastructure}-nexus-releases']/username/text()")
-    println "${ext.infrastructure}-nexus-snapshots username: " + ext.mavenSettings.getText("//server[id='${ext.infrastructure}-nexus-snapshots']/username/text()")
+    // TODO fix nexus.local-releases and nexus.local-snapshots
+    if ("github" != "${ext.infrastructure}") {
+      println "${ext.infrastructure}-nexus-releases username: " + ext.mavenSettings.getText("//server[id='${ext.infrastructure}-nexus-releases']/username/text()")
+      println "${ext.infrastructure}-nexus-snapshots username: " + ext.mavenSettings.getText("//server[id='${ext.infrastructure}-nexus-snapshots']/username/text()")
+    }
     if ( gradle.ext.springBootApi && gradle.ext.springBootVersion ) {
       ext.springBootApi = gradle.ext.springBootApi
       ext.springBootVersion = gradle.ext.springBootVersion
@@ -112,6 +115,8 @@ allprojects {
     maven { url 'http://repo.spring.io/release' }
     maven { url 'http://repo.spring.io/milestone' }
     maven { url 'http://repo.spring.io/snapshot' }
+    maven { url 'https://oss.sonatype.org/content/groups/public' }
+    //maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
   }
 
 //  apply plugin: 'maven'
@@ -157,7 +162,7 @@ allprojects {
   }
 
   subprojects {
-    println "init.gradle allprojects ${project.name}"
+    //println "init.gradle subprojects ${project.name}"
 
     project.version = rootProject.version
 
