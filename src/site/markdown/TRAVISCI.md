@@ -25,6 +25,16 @@
 
 see: [Environment variables](https://docs.travis-ci.com/user/environment-variables/)
 
+Variables in travis repo settings:
+
+|name                    | usage                | note                                                      |
+|------------------------|:--------------------:|:---------------------------------------------------------:|
+|GITHUB_USERNAME         | for github maven site| Display value in build log                                |
+|GITHUB_GIT_SERVICE_TOKEN| for github maven site| Not display value in build log                            |
+|                        |                      |                                                           |
+|MAVEN_CENTRAL_USER      | for deploy artifact  | Do not set on forked repo, Not display value in build log |
+|MAVEN_CENTRAL_PASS      | for deploy artifact  | Do not set on forked repo, Not display value in build log |
+
 ## Note
 
     env:
