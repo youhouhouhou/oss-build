@@ -55,7 +55,7 @@ maven_pull_base_images() {
 maven_analysis() {
     if [[ "$(basename $(pwd))" == *-config ]] && ([ -f "application.yml" ] || [ -f "application.properties" ]); then
         echo "maven_analysis config repository"
-        mvn ${MAVEN_SETTINGS} -U clean package | grep -v 'Downloading:'
+        mvn ${MAVEN_SETTINGS} -U clean package | grep -v 'Downloading:' | grep -Ev '^Generating .+\.html\.\.\.'
     else
         echo "maven_analysis sonar"
         mvn ${MAVEN_SETTINGS} sonar:sonar
@@ -77,11 +77,11 @@ maven_test_and_build() {
 
         maven_pull_base_images
         # reduce log avoid travis 4MB limit
-        mvn ${MAVEN_SETTINGS} -U clean org.apache.maven.plugins:maven-antrun-plugin:run@clean-local-deploy-dir deploy | grep -v 'Downloading:'
+        mvn ${MAVEN_SETTINGS} -U clean org.apache.maven.plugins:maven-antrun-plugin:run@clean-local-deploy-dir deploy | grep -v 'Downloading:' | grep -Ev '^Generating .+\.html\.\.\.'
     else
         maven_pull_base_images
         # reduce log avoid travis 4MB limit
-        mvn ${MAVEN_SETTINGS} -U clean install | grep -v 'Downloading:'
+        mvn ${MAVEN_SETTINGS} -U clean install | grep -v 'Downloading:' | grep -Ev '^Generating .+\.html\.\.\.'
     fi
 }
 
