@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+
+if [ "${GIT_REPO_OWNER}" != "home1-oss" ] && [ "${1}" != "test_and_build" ]; then
+    return
+
 if [ -z "${BUILD_DEPENDENCY_CHECK}" ]; then BUILD_DEPENDENCY_CHECK="false"; fi
 if [ -z "${BUILD_PUBLISH_DEPLOY_SEGREGATION}" ]; then BUILD_PUBLISH_DEPLOY_SEGREGATION="false"; fi
 if [ -z "${BUILD_SITE}" ]; then BUILD_SITE="false"; fi
