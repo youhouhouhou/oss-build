@@ -3,15 +3,11 @@ addons:
     packages:
     - graphviz
 before_install:
-- wget https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-- unzip -qq apache-maven-3.3.9-bin.zip
-- export M2_HOME=$PWD/apache-maven-3.3.9
-- export PATH=$M2_HOME/bin:$PATH
+- echo "before_install"
 branches:
   only:
   - master
   - develop
-  - develop1
   - build_on_trivasci
 cache:
   directories:
@@ -31,7 +27,8 @@ language: java
 script:
 - echo "on_every_push"
 - bash ci.sh test_and_build
-- bash ci.sh publish_snapshot
+#- bash ci.sh publish_snapshot
+#- bash ci.sh deploy_maven_site
 services:
 - docker
 sudo: required
