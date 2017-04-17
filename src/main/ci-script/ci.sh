@@ -72,6 +72,7 @@ publish_release_tag() {
     echo "publish_release_tag @ $(pwd)";
 }
 
+# 分离site操作
 deploy_maven_site() {
     echo "deploy_maven_site @ $(pwd)";
     if [ -f pom.xml ]; then maven_deploy_site; fi
