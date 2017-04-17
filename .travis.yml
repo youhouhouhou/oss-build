@@ -11,6 +11,7 @@ branches:
   only:
   - master
   - develop
+  - develop1
   - build_on_trivasci
 cache:
   directories:
